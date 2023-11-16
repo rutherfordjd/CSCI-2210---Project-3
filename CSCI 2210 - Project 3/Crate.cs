@@ -8,10 +8,10 @@ namespace CSCI_2210___Project_3
 {
     public class Crate
     {
-        public string Id { get; }
+        public int Id { get; }
         public double Price { get; }
 
-        Crate(string id)
+        Crate(int id)
         {
             Id = id;
             Random rand = new Random();

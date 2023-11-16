@@ -7,8 +7,14 @@ using System.Threading.Tasks;
 
 namespace CSCI_2210___Project_3
 {
-    static void Main()
+    class Program
     {
 
+        static void Main()
+        {
+            int dockCount = 5;
+            Warehouse warehouse = new Warehouse(dockCount);
+            warehouse.Run();
+        }
     }
 }

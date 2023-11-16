@@ -12,10 +12,10 @@ namespace CSCI_2210___Project_3
         public string DeliveryCompany { get; }
         public Stack<Crate> Trailer { get; }
 
-       public Truck(string driver, string delieveryCompany)
+       public Truck(string driver, string deliveryCompany)
         {
             Driver = driver;
-            delieveryCompany = DeliveryCompany;
+            deliveryCompany = DeliveryCompany;
             Trailer = new Stack<Crate>();
             
         }

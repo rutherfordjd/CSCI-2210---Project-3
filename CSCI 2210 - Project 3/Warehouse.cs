@@ -30,8 +30,8 @@ namespace CSCI_2210___Project_3
 
         private Truck GenerateRandomTruck()
         {
-            string[] driverNames = { };
-            string[] companyNames = { };
+            string[] driverNames = { "Luke Berry", "Joe Rutherford", "Jake Gillenwater", "John Doe", "Jeff Bezos" };
+            string[] companyNames = { "BTD6", "Fortnite Shopping Cart Delivery", "UPS", "FedEx", "US Mail" };
 
             Random randy = new Random();
             string driver = driverNames[randy.Next(driverNames.Length)];
@@ -74,7 +74,17 @@ namespace CSCI_2210___Project_3
                                 : "No more trucks waiting";
 
                             string logEntry = $"{time},{currentTruck.Driver},{currentTruck.DeliveryCompany},{currentTruck.Unload().Id},{Price},{scenario}\n";
-                            File.AppendAllText(csvFilePath, logEntry);
+                            try
+                            {
+                                using (StreamWriter writer = new StreamWriter(csvFilePath, true))
+                                {
+                                    writer.WriteLine(logEntry);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Error writing to CSV file: {ex.Message}");
+                            }
                         }
                     }
                 }
