@@ -11,11 +11,12 @@ namespace CSCI_2210___Project_3
         public int Id { get; }
         public double Price { get; }
 
-        Crate(int id)
+        public Crate(int id, double price)
         {
             Id = id;
             Random rand = new Random();
             Price = rand.NextDouble() * (500 - 50) + 50;
+            Price = price;
         }
 
         public override string ToString()

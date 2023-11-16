@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -28,26 +29,28 @@ namespace CSCI_2210___Project_3
             Entrance = new Queue<Truck>();
         }
 
-        private Truck GenerateRandomTruck()
+        public Truck GenerateRandomTruck()
         {
             string[] driverNames = { "Luke Berry", "Joe Rutherford", "Jake Gillenwater", "John Doe", "Jeff Bezos" };
             string[] companyNames = { "BTD6", "Fortnite Shopping Cart Delivery", "UPS", "FedEx", "US Mail" };
-            Stack<Crate> trailer = new Stack<Crate>();
-            Random rand = new Random();
-            int numberCrate = rand.Next(1, 15);
-            for(int i = 1; i <= numberCrate; i++)
+            Random random = new Random();
+            string Driver = driverNames[random.Next(driverNames.Length)];
+            string DeliveryCompany = companyNames[random.Next(companyNames.Length)];
+
+            Truck truck = new Truck(Driver, DeliveryCompany);
+
+            int numberCrate = random.Next(1, 15);
+            for(int i = 0; i <= numberCrate; i++)
             {
-                Random rand2 = new Random();
-                int id = rand2.Next(1, 100);
-                Crate newCrate = new Crate(id);
-                trailer.Push(newCrate);
+                int id = random.Next(1, 100);
+                double cratePrice = random.Next(50, 501); // Random price between $50 and $500
+                Crate crate = new Crate(id, cratePrice);
+                truck.Load(crate);
             }
 
 
-            Random randy = new Random();
-            string driver = driverNames[randy.Next(driverNames.Length)];
-            string company = companyNames[randy.Next(companyNames.Length)];
-            return new Truck(driver, company);
+
+            return truck;
         }
 
         public void Run()
@@ -55,7 +58,6 @@ namespace CSCI_2210___Project_3
             Random randy = new Random();
 
             string csvFilePath = "crate_unloading_log.csv";
-            File.WriteAllText(csvFilePath, "Time,Driver,Company,CrateId,CrateValue,Scenario\n");
 
             for (int time = 1; time <= 100; time++)
             {
@@ -63,7 +65,7 @@ namespace CSCI_2210___Project_3
                 {
                     Truck newTruck = GenerateRandomTruck();
                     Entrance.Enqueue(newTruck);
-                    Console.WriteLine($"Time {time}: Truck arrived -- \nDriver: {newTruck.Driver}\nCompany: {newTruck.DeliveryCompany}");
+                    Console.WriteLine($"Time {time}: Truck arrived -- \n\tDriver: {newTruck.Driver}\n\tCompany: {newTruck.DeliveryCompany}");//company doesn't print
                 }
 
                 foreach (Dock dock in Docks)
@@ -76,7 +78,8 @@ namespace CSCI_2210___Project_3
                         {
                             double Price = randy.Next(50, 501);
                             dock.UnloadCrate(Price);
-                            Console.WriteLine($"Time {time}: Unloaded crate from Truck --\nDriver: {currentTruck.Driver}\nCompany: {currentTruck.DeliveryCompany}\nCrate Price: ${Price:F2}");
+                            Console.WriteLine($"Time {time}: Unloaded crate from Truck --\nDriver: {currentTruck.Driver}\nCompany: {currentTruck.DeliveryCompany}\nCrate Price: ${Price}");
+                            dock.SendOff();
 
                             string scenario = dock.Line.Count > 1
                                 ? "More trucks in line"
@@ -85,26 +88,33 @@ namespace CSCI_2210___Project_3
                                 : "No more trucks waiting";
 
                             string logEntry = $"{time},{currentTruck.Driver},{currentTruck.DeliveryCompany},{currentTruck.Unload().Id},{Price},{scenario}\n";
-                            try
+                            AppendToCsvFile(csvFilePath, logEntry);
+                            static void AppendToCsvFile(string csvfilePath, string logEntry)
                             {
-                                using (StreamWriter writer = new StreamWriter(csvFilePath, true))
+                                try
                                 {
-                                    writer.WriteLine(logEntry);
+                                    // Append the new data to the CSV file
+                                    using (StreamWriter writer = new StreamWriter(csvfilePath, true))
+                                    {
+                                        writer.WriteLine(logEntry);
+                                    }
+
+                                    Console.WriteLine("Data appended successfully.");
                                 }
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine($"Error writing to CSV file: {ex.Message}");
+                                catch (Exception ex)
+                                {
+                                    Console.WriteLine($"Error appending data to CSV file: {ex.Message}");
+                                }
                             }
                         }
                     }
                 }
             }
 
-            Console.WriteLine("Simulation completed. Final Statistics --");
+            Console.WriteLine("\nSimulation completed. Final Statistics --");
             foreach (Dock dock in Docks)
             {
-                Console.WriteLine($"Dock {dock.ID} --\nTotal Sales: ${dock.TotalSales:F2}\nTotal Crates: {dock.TotalCrates}\nTotal Trucks:{dock.TotalTrucks}\nTime In Use: {dock.TimeInUse}\n Time Not In Use: {dock.TimeNotInUse}");
+                Console.WriteLine($"Dock {dock.ID} --\nTotal Sales: ${dock.TotalSales}\nTotal Crates: {dock.TotalCrates}\nTotal Trucks:{dock.TotalTrucks}\nTime In Use: {dock.TimeInUse}\n Time Not In Use: {dock.TimeNotInUse}");
             }
         }
     }

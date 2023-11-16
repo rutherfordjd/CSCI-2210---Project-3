@@ -23,12 +23,12 @@ namespace CSCI_2210___Project_3
         }
 
 
-        void JoinLine(Truck truck)
+       public void JoinLine(Truck truck)
         {
             Line.Enqueue(truck);
         }
 
-        Truck SendOff()
+        public Truck SendOff()
         {
             if (Line.Count > 0)
             {
