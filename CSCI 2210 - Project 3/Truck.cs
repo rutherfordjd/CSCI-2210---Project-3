@@ -20,7 +20,7 @@ namespace CSCI_2210___Project_3
             
         }
 
-        void Load(Crate crate)
+        public void Load(Crate crate)
         {
             Trailer.Push(crate);
         }

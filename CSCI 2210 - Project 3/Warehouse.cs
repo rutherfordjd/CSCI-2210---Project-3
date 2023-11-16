@@ -32,6 +32,17 @@ namespace CSCI_2210___Project_3
         {
             string[] driverNames = { "Luke Berry", "Joe Rutherford", "Jake Gillenwater", "John Doe", "Jeff Bezos" };
             string[] companyNames = { "BTD6", "Fortnite Shopping Cart Delivery", "UPS", "FedEx", "US Mail" };
+            Stack<Crate> trailer = new Stack<Crate>();
+            Random rand = new Random();
+            int numberCrate = rand.Next(1, 15);
+            for(int i = 1; i <= numberCrate; i++)
+            {
+                Random rand2 = new Random();
+                int id = rand2.Next(1, 100);
+                Crate newCrate = new Crate(id);
+                trailer.Push(newCrate);
+            }
+
 
             Random randy = new Random();
             string driver = driverNames[randy.Next(driverNames.Length)];
